@@ -13,6 +13,8 @@ from ratelimit import rate_limited
 # print(scheme_of_pages[0]['links'][1]['uri'])
 
 # function checks if there is a link to next page with list of games or there is none
+ONE_MINUTE=60
+@rate_limited(calls=100, period=ONE_MINUTE)
 def existance_of_next_link(existent_link):
     fetching_response = requests.get(existent_link)
     response_body = json.loads(fetching_response.text)
