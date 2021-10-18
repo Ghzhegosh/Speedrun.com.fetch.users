@@ -46,7 +46,3 @@ def fetching_process(existent_link):
 
 
 runs_list = fetching_process('https://www.speedrun.com/api/v1/games')
-file = open("Results.txt", "w")
-for element in runs_list:
-    file.write(element + "\n")
-file.close()
