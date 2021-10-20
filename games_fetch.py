@@ -1,5 +1,6 @@
 import json
-import tarfile
+import datetime
+
 
 import requests
 
@@ -44,5 +45,5 @@ def fetching_process(existent_link):
         existent_link = existance_of_next_link(existent_link)
     return links_to_runs
 
-
+print(datetime.datetime.now())
 runs_list = fetching_process('https://www.speedrun.com/api/v1/games')
