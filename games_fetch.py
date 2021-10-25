@@ -1,11 +1,9 @@
 import json
 import datetime
 
-
 import requests
 
 from ratelimit import rate_limited
-
 
 # fetching_link = 'https://www.speedrun.com/api/v1/games'
 # fetching_response = requests.get(fetching_link)
@@ -14,8 +12,10 @@ from ratelimit import rate_limited
 # print(scheme_of_pages[0]['links'][1]['uri'])
 
 # function checks if there is a link to next page with list of games or there is none
-ONE_MINUTE=60
-@rate_limited(calls=100, period=ONE_MINUTE)
+
+
+
+
 def existance_of_next_link(existent_link):
     fetching_response = requests.get(existent_link)
     response_body = json.loads(fetching_response.text)
@@ -43,7 +43,10 @@ def fetching_process(existent_link):
         for game in scheme_of_body:
             links_to_runs.append(game['links'][1]['uri'])
         existent_link = existance_of_next_link(existent_link)
+        print(existent_link)
     return links_to_runs
+
 
 print(datetime.datetime.now())
 runs_list = fetching_process('https://www.speedrun.com/api/v1/games')
+print(len(runs_list))
