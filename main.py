@@ -73,8 +73,8 @@ class Speedrun_Manager:
 print('starting sheet'+'\n')
 print(datetime.datetime.now())
 speedrun_manager=Speedrun_Manager()
-file1 = open("Users.txt", "w")
-file2 = open("broken_games.txt", "w")
+file1 = open("venv/Users.txt", "w")
+file2 = open("venv/broken_games.txt", "w")
 for run in runs_list:
     print(run+'  '+'\n')
     speedrun_manager.fetching_process(run)
