@@ -5,6 +5,7 @@ import requests
 
 from ratelimit import rate_limited
 
+
 # fetching_link = 'https://www.speedrun.com/api/v1/games'
 # fetching_response = requests.get(fetching_link)
 # response_body = json.loads(fetching_response.text)
@@ -14,9 +15,7 @@ from ratelimit import rate_limited
 # function checks if there is a link to next page with list of games or there is none
 
 
-
-
-def existance_of_next_link(existent_link):
+def get_next_page_link(existent_link):
     fetching_response = requests.get(existent_link)
     response_body = json.loads(fetching_response.text)
     scheme_of_pages = response_body['pagination']
@@ -35,18 +34,27 @@ def existance_of_next_link(existent_link):
 
 
 def fetching_process(existent_link):
-    links_to_runs = []
+    # links_to_runs = []
+    list_of_games = open('list_of_games/list_of_games.txt', 'a')
     while existent_link is not None:
         fetching_response = requests.get(existent_link)
         response_body = json.loads(fetching_response.text)
         scheme_of_body = response_body['data']
         for game in scheme_of_body:
-            links_to_runs.append(game['links'][1]['uri'])
-        existent_link = existance_of_next_link(existent_link)
+            # links_to_runs.append(game['links'][1]['uri'])
+            list_of_games.write(f'{game["links"][1]["uri"]}\n')
+        existent_link = get_next_page_link(existent_link)
         print(existent_link)
-    return links_to_runs
 
 
-print(datetime.datetime.now())
-runs_list = fetching_process('https://www.speedrun.com/api/v1/games')
-print(len(runs_list))
+
+
+file = open('list_of_games/list_of_games.txt', 'r')
+if len(file.readlines()) == 0:
+    print('checked')
+    print(datetime.datetime.now())
+    fetching_process('https://www.speedrun.com/api/v1/games?offset=30040')
+
+
+#runs_list = fetching_process('https://www.speedrun.com/api/v1/games')
+# print(len(runs_list))
