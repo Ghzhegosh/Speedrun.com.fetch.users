@@ -60,6 +60,7 @@ def broken_game_check(link_to_games_runs):
     else:
         return False
 
+
 def get_json_from_link(link, part_of_json, param=None):
     request = requests.get(link, params=param)
     print(f'get request of {link} took {request.elapsed.total_seconds()}')
