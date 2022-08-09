@@ -5,9 +5,9 @@ import time
 start = time.time()
 
 
-def get_jsons(results):
+def get_jsons(result):
     list_of_games = open('list_of_games/list_of_games.txt', 'a')
-    for result in results:
+    for result in result:
         # print(result)
         json_body = result.json()
         print(json_body)
