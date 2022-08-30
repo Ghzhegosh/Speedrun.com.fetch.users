@@ -7,7 +7,7 @@ import json
 import games_fetch
 from time import sleep
 from retry import retry
-import datetime
+from datetime import datetime
 
 
 class Speedrun_Manager:
@@ -17,27 +17,27 @@ class Speedrun_Manager:
 
     def get_link_to_next_page(self, link_to_next_page):
         scheme_of_pages = get_json_from_link(link_to_next_page, 'pagination')
-        links_in_scheme = scheme_of_pages['links']
+        pagination_links = scheme_of_pages['links']
         # Variable for check purposes
-        amount_of_links_in_scheme = len(links_in_scheme)
+        amount_of_links_in_scheme = len(pagination_links)
         # далее проверка того что ссылка ведёт на следующую страницу, если их 2 то, то что одна из ссылок является
         # следующей
-        if amount_of_links_in_scheme == 1 and (links_in_scheme[0])['rel'] == 'next':
-            link_to_next_page = (links_in_scheme[0])['uri']
+        if amount_of_links_in_scheme == 1 and (pagination_links[0])['rel'] == 'next':
+            link_to_next_page = (pagination_links[0])['uri']
             print(link_to_next_page + ' 1')
             return link_to_next_page
-        elif amount_of_links_in_scheme == 2 and (links_in_scheme[1])['rel'] == 'next':
+        elif amount_of_links_in_scheme == 2 and (pagination_links[1])['rel'] == 'next':
             print(link_to_next_page + ' 2')
-            link_to_next_page = (links_in_scheme[1])['uri']
+            link_to_next_page = (pagination_links[1])['uri']
             return link_to_next_page
-        elif amount_of_links_in_scheme == 1 and (links_in_scheme[0])['rel'] == 'prev':
+        elif amount_of_links_in_scheme == 1 and (pagination_links[0])['rel'] == 'prev':
             return None
 
     @retry(exceptions=JSONDecodeError)
     def fetching_process(self, existent_link):
+        start = datetime.now()
         file1 = open("users/user2.txt", "a")
         while existent_link is not None:
-            time.sleep(0.1)
             runs = get_json_from_link(existent_link, 'data')
             for run in runs:
                 if run['players'] and self.users.count(run['players'][0]['uri']) < 1 and (
@@ -46,6 +46,7 @@ class Speedrun_Manager:
                     file1.write(f'{run["players"][0]["uri"]}\n')
             if requests.get(existent_link).status_code == 200:
                 existent_link = self.get_link_to_next_page(existent_link)
+        print(f'{datetime.now() - start} seconds elapsed in this iteration of function')
         return self.users
 
 
@@ -69,7 +70,7 @@ def get_json_from_link(link, part_of_json, param=None):
 
 
 print('Starting Fetching of Users' + '\n')
-print(datetime.datetime.now())
+print(datetime.now())
 speedrun_manager = Speedrun_Manager()
 games_list = open('list_of_games/list_of_games.txt')
 games_list_array = games_list.read().split('\n')
@@ -80,4 +81,4 @@ for run in games_list_array:  # runs_list:
         continue
     print(run + ' ' + '\n')
     speedrun_manager.fetching_process(run)
-    print(datetime.datetime.now())
+    print(datetime.now())
